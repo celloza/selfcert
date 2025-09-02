@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SelfCert Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script>
+      (function(){
+        try {
+          var pref = localStorage.getItem('themePref') || 'system';
+          var mql = window.matchMedia('(prefers-color-scheme: dark)');
+            var mode = pref === 'system' ? (mql.matches ? 'dark' : 'light') : pref;
+          if(mode === 'dark') { document.documentElement.classList.add('dark'); document.body.classList.add('dark'); }
+          else { document.documentElement.classList.remove('dark'); document.body.classList.remove('dark'); }
+        } catch(e) { /* no-op */ }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
