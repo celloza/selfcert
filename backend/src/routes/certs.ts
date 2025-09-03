@@ -80,13 +80,14 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 router.post('/', issueRateLimit, async (req: Request, res: Response) => {
-  let { rootCaId, displayName, description, backdateDays, validDays } = req.body || {};
+  const { rootCaId: rootCaIdRaw, displayName: displayNameRaw, description: descriptionRaw, backdateDays: backdateDaysRaw, validDays: validDaysRaw } = req.body || {};
+  const rootCaId = rootCaIdRaw; let displayName = displayNameRaw; let description = descriptionRaw; const backdateDays = backdateDaysRaw; const validDays = validDaysRaw;
   if (typeof rootCaId !== 'string') return res.status(400).json({ error: 'rootCaId required' });
   if (typeof displayName !== 'string') return res.status(400).json({ error: 'displayName required' });
   displayName = displayName.trim();
   if (!displayName) return res.status(400).json({ error: 'displayName empty' });
   if (displayName.length > 100) return res.status(400).json({ error: 'displayName too long (max 100)' });
-  if (!/^[\w .,'()\-]+$/u.test(displayName)) return res.status(400).json({ error: 'displayName has invalid characters' });
+  if (!/^[\w .,'()-]+$/u.test(displayName)) return res.status(400).json({ error: 'displayName has invalid characters' });
   if (description) {
     if (typeof description !== 'string') return res.status(400).json({ error: 'description invalid' });
     description = description.trim();
@@ -112,7 +113,8 @@ router.post('/', issueRateLimit, async (req: Request, res: Response) => {
 
 // Issue certificate from CSR (client supplies key pair). Body: { rootCaId, csrPem, displayName?, description?, backdateDays?, validDays? }
 router.post('/csr', issueRateLimit, async (req: Request, res: Response) => {
-  let { rootCaId, csrPem, displayName, description, backdateDays, validDays } = req.body || {};
+  const { rootCaId: rootCaIdRaw2, csrPem, displayName: displayNameRaw2, description: descriptionRaw2, backdateDays: backdateDaysRaw2, validDays: validDaysRaw2 } = req.body || {};
+  const rootCaId = rootCaIdRaw2; let displayName = displayNameRaw2; let description = descriptionRaw2; const backdateDays = backdateDaysRaw2; const validDays = validDaysRaw2;
   if (typeof rootCaId !== 'string') return res.status(400).json({ error: 'rootCaId required' });
   if (typeof csrPem !== 'string' || !csrPem.includes('BEGIN CERTIFICATE REQUEST')) return res.status(400).json({ error: 'csrPem invalid' });
   if (displayName !== undefined) {
@@ -120,7 +122,7 @@ router.post('/csr', issueRateLimit, async (req: Request, res: Response) => {
     displayName = displayName.trim();
     if (!displayName) return res.status(400).json({ error: 'displayName empty' });
     if (displayName.length > 100) return res.status(400).json({ error: 'displayName too long (max 100)' });
-    if (!/^[\w .,'()\-]+$/u.test(displayName)) return res.status(400).json({ error: 'displayName has invalid characters' });
+  if (!/^[\w .,'()-]+$/u.test(displayName)) return res.status(400).json({ error: 'displayName has invalid characters' });
   }
   if (description) {
     if (typeof description !== 'string') return res.status(400).json({ error: 'description invalid' });
@@ -180,7 +182,7 @@ router.get('/:id/bundle', async (req: Request, res: Response) => {
 router.post('/:id/revoke', revokeRateLimit, async (req: Request, res: Response) => {
   const user = (req as any).user?.sub || 'unknown';
   const id = req.params.id;
-  if (!/^[0-9a-fA-F\-]{6,}$/u.test(id)) return res.status(400).json({ error: 'invalid id format' });
+  if (!/^[0-9a-fA-F-]{6,}$/u.test(id)) return res.status(400).json({ error: 'invalid id format' });
   try {
     const cert = await getCertificate(id);
     if (!cert) return res.status(404).json({ error: 'Not found' });

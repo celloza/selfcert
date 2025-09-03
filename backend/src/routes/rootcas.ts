@@ -25,7 +25,8 @@ router.post('/', async (req: Request, res: Response) => {
 
 // Import existing self-signed root CA (requires certPem + keyPem)
 router.post('/import', async (req: Request, res: Response) => {
-  let { displayName, certPem, keyPem } = req.body || {};
+  const { certPem, keyPem } = req.body || {};
+  let { displayName } = req.body || {};
   if (typeof displayName !== 'string' || !displayName.trim()) return res.status(400).json({ error: 'displayName required' });
   if (typeof certPem !== 'string' || !certPem.includes('BEGIN CERTIFICATE')) return res.status(400).json({ error: 'certPem invalid' });
   if (typeof keyPem !== 'string' || !keyPem.includes('BEGIN')) return res.status(400).json({ error: 'keyPem invalid' });

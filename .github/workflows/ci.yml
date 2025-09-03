@@ -39,8 +39,9 @@ jobs:
         working-directory: backend
         run: npm run build
 
-      - name: Lint placeholder (skip) 
-        run: echo "No lint configured yet"
+      - name: Lint backend
+        working-directory: backend
+        run: npm run lint
 
       - name: Install frontend deps
         working-directory: frontend
@@ -49,6 +50,9 @@ jobs:
       - name: Build frontend
         working-directory: frontend
         run: npm run build
+      - name: Lint frontend
+        working-directory: frontend
+        run: npm run lint
 
       - name: Upload frontend dist artifact
         if: success()

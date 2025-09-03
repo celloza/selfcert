@@ -8,7 +8,8 @@ const pageSize = 50;
 
 const AuditLog: React.FC = () => {
   const [items, setItems] = useState<AuditEvent[]>([]);
-  const [cursor, setCursor] = useState<string | undefined>();
+  // Store last used cursor (no read needed)
+  const setCursor = (_v: string | undefined) => { /* no-op holder */ };
   const [nextCursor, setNextCursor] = useState<string | undefined>();
   const [userFilter, setUserFilter] = useState('');
   const [nameFilter, setNameFilter] = useState('');
@@ -27,8 +28,7 @@ const AuditLog: React.FC = () => {
       setCursor(c);
     } finally { setLoading(false); }
   };
-  useEffect(() => { load(undefined, true); // eslint-disable-next-line
-  }, [userFilter, nameFilter, sortCtl.sort, sortCtl.dir]);
+  useEffect(() => { load(undefined, true); }, [userFilter, nameFilter, sortCtl.sort, sortCtl.dir]);
   const reset = () => { setUserFilter(''); setNameFilter(''); };
   return <div className="space-y-4">
     <h2 className="text-xl font-medium">Audit Log</h2>

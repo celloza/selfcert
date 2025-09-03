@@ -64,10 +64,7 @@ async function storeCertKey(id: string, keyPem: string) {
   try { await kvClient().setSecret(`cert-${id}-key`, keyPem); } catch (err) { console.error('store cert key failed', err); }
 }
 
-async function getCertKey(id: string): Promise<string | undefined> {
-  if (useLocalSecrets) return localSecrets.get(`cert-${id}-key`);
-  try { const s = await kvClient().getSecret(`cert-${id}-key`); return s.value; } catch { return undefined; }
-}
+// getCertKey removed (currently unused retrieval of issued cert private keys)
 
 export async function issueCertificate(params: { rootCaId: string; displayName: string; description?: string; actor: string; backdateDays?: number; validDays?: number; }): Promise<IssuedCert & { keyPem: string }> {
   const { rootCaId, displayName, description, actor, backdateDays = 0, validDays = 365 } = params;
@@ -113,7 +110,7 @@ export async function issueCertificate(params: { rootCaId: string; displayName: 
         return undefined;
       }).filter(Boolean) as string[];
     }
-  } catch {}
+  } catch { /* ignore SAN parse errors */ }
   const out: IssuedCert = { id, rootCaId, owner: actor, displayName, description, certPem, createdAt, sans };
   if (certsTable) {
     try {
@@ -148,7 +145,7 @@ export async function issueCertificateFromCSR(params: { rootCaId: string; csrPem
     displayName = String(cnAttr.value);
   }
   if (displayName.length > 100) throw new Error('displayName too long (max 100)');
-  if (!/^[\w .,'()\-]+$/u.test(displayName)) throw new Error('displayName has invalid characters');
+  if (!/^[\w .,'()-]+$/u.test(displayName)) throw new Error('displayName has invalid characters');
   const rootCert = forge.pki.certificateFromPem(rootMeta.certPem);
   const rootKey = forge.pki.privateKeyFromPem(rootKeyPem);
   const cert = forge.pki.createCertificate();
@@ -207,7 +204,7 @@ export async function issueCertificateFromCSR(params: { rootCaId: string; csrPem
         return undefined;
       }).filter(Boolean) as string[];
     }
-  } catch {}
+  } catch { /* ignore extracting SANs */ }
   const out: IssuedCert = { id, rootCaId, owner: actor, displayName, description, certPem, createdAt, sans };
   if (certsTable) {
     try {
@@ -242,7 +239,7 @@ export async function listCertificates(opts: { actor: string; isAdmin: boolean }
               }).filter(Boolean) as string[];
             }
           }
-        } catch {}
+  } catch { /* ignore parse errors */ }
       }
       return c;
     }).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
@@ -284,7 +281,7 @@ export async function listCertificates(opts: { actor: string; isAdmin: boolean }
             }).filter(Boolean) as string[];
           }
         }
-      } catch {}
+  } catch { /* ignore parse errors */ }
     }
   });
   return items.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
@@ -315,7 +312,7 @@ export async function getCertificate(id: string): Promise<IssuedCert | undefined
         return undefined;
       }).filter(Boolean) as string[];
     }
-  } catch {}
+  } catch { /* ignore parse errors */ }
       return cert;
     }
   }

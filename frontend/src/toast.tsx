@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 
-export interface Toast { id: string; type: 'success'|'error'|'info'; message: string; };
+export interface Toast { id: string; type: 'success'|'error'|'info'; message: string; }
 interface ToastCtxValue { add: (t: Omit<Toast,'id'>) => void; remove: (id: string) => void; }
 const ToastCtx = createContext<ToastCtxValue | undefined>(undefined);
 
