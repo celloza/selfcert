@@ -13,7 +13,7 @@ async function createRoot(base: string, name: string) {
   return resp.data.id as string;
 }
 
-async function issue(base: string, rootCaId: string, plan: PlanCert, actor?: string) {
+async function issue(base: string, rootCaId: string, plan: PlanCert, _actor?: string) {
   const resp = await axios.post(base + '/api/certs', { rootCaId, displayName: plan.displayName, description: plan.description, backdateDays: plan.backdateDays, validDays: plan.validDays });
   console.log('Issued cert:', resp.data.id, plan.displayName, 'created', resp.data.createdAt);
 }
