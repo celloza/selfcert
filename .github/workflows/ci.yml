@@ -84,7 +84,7 @@ jobs:
       - name: Start backend server
         working-directory: backend
         run: |
-          node dist/index.js & echo $! > server.pid
+          npx tsx src/index.ts & echo $! > server.pid
           for i in {1..40}; do
             if curl -fsS http://localhost:8080/healthz > /dev/null; then echo "Server up"; break; fi
             sleep 0.5
