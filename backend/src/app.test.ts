@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import request from 'supertest';
 import app from './index.js';
-import { clearAllRootCAs, createRootCA, listRootCAs, getRootCAPrivateKeyPem } from './services/rootcas.js';
-import { issueCertificate, listCertificates, revokeCertificate, issueCertificateFromCSR } from './services/certs.js';
+import { clearAllRootCAs, createRootCA, getRootCAPrivateKeyPem } from './services/rootcas.js';
+import { listCertificates } from './services/certs.js';
 import forge from 'node-forge';
 import { record, query } from './services/audit.js';
 
