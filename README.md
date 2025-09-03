@@ -1,5 +1,7 @@
 # SelfCert Portal
 
+[![CI](https://github.com/celloza/selfcert/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/celloza/selfcert/actions/workflows/ci.yml)
+
 Self-hosted certificate self‑service portal for issuing and managing user (client) certificates under internal Root / Intermediate CAs. Designed for Azure environments (Key Vault, Table Storage, Entra ID) but runs locally with zero external dependencies.
 
 ## ✨ Key Features
