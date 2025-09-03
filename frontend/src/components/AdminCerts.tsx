@@ -28,10 +28,12 @@ const AdminCerts: React.FC = () => {
   const buildParams = (cursor?: string) => { const params: any = { limit: pageSize, sort: sortCtl.sort, dir: sortCtl.dir }; if (cursor) params.cursor = cursor; if (filterOwner) params.user = filterOwner; if (filterRoot) params.rootCa = filterRoot; if (filterStatus) params.status = filterStatus; if (filterName) params.name = filterName; return params; };
   const load = async (cursor?: string, reset=false) => { setLoadingList(true); try { const params = buildParams(cursor); const { data } = await axios.get('/api/certs', { params }); setCerts(prev => (cursor && !reset) ? [...prev, ...data.items] : data.items); setNextCursor(data.nextCursor); } finally { setLoadingList(false); } };
   const populateOwners = async () => { try { const { data } = await axios.get('/api/certs', { params: { limit: 500 } }); const uniq = Array.from(new Set<string>(data.items.map((c: Cert)=>c.owner))).sort(); setOwners(uniq); } catch {/* ignore */} };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { loadRoots(); load(); populateOwners(); }, []);
-  useEffect(() => { load(undefined, true); // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterOwner, filterRoot, filterStatus, filterName]);
-  useEffect(() => { load(undefined, true); /* eslint-disable-next-line */ }, [sortCtl.sort, sortCtl.dir]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { load(undefined, true); }, [filterOwner, filterRoot, filterStatus, filterName]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { load(undefined, true); }, [sortCtl.sort, sortCtl.dir]);
   const openView = async (id: string) => { const { data } = await axios.get(`/api/certs/${id}`); setViewingCert(data); };
   const revoke = async (id: string) => { try { const { data } = await axios.post(`/api/certs/${id}/revoke`); const when = data.revokedAt || new Date().toISOString(); setCerts(prev => prev.map(c => c.id===id?{...c, revokedAt: when}:c)); if (viewingCert?.id===id) setViewingCert({ ...viewingCert, revokedAt: when }); toast({ type: 'success', message: 'Certificate revoked.' }); } catch (e: any) { toast({ type: 'error', message: e?.response?.data?.error || 'Revoke failed' }); } };
   const resetFilters = () => { setFilterOwner(''); setFilterRoot(''); setFilterStatus(''); setFilterName(''); };

@@ -4,6 +4,7 @@ const tseslint = require('@typescript-eslint/eslint-plugin');
 const parser = require('@typescript-eslint/parser');
 
 module.exports = [
+  // Ignored paths (replaces legacy .eslintignore which has been removed)
   { ignores: ['dist/**', 'node_modules/**'] },
   js.configs.recommended,
   {

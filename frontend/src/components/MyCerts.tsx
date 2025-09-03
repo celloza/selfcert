@@ -42,6 +42,7 @@ const MyCerts: React.FC = () => {
       setNextCursor(data.nextCursor);
     } finally { setLoading(false); }
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { loadRoots(); load(); }, [account?.username]);
   const openView = async (id: string) => { const { data } = await axios.get(`/api/certs/${id}`); if (!account || data.owner === account.username) setViewingCert(data); };
 

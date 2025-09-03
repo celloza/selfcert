@@ -28,6 +28,7 @@ const AuditLog: React.FC = () => {
       setCursor(c);
     } finally { setLoading(false); }
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(undefined, true); }, [userFilter, nameFilter, sortCtl.sort, sortCtl.dir]);
   const reset = () => { setUserFilter(''); setNameFilter(''); };
   return <div className="space-y-4">
