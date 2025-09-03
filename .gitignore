@@ -46,5 +46,6 @@ crash.log
 *.pfx
 .github/copilot-instructions.md
 
-# Local dev PKI data (generated root CA keys, cert metadata, should never be committed)
-backend/data/
+# Local dev PKI data (ignore contents but keep placeholder)
+backend/data/*
+!backend/data/.gitkeep
