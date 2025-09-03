@@ -84,4 +84,8 @@ app.use('/api/rootcas', rootCasRouter);
 app.use('/api/audit', auditRouter);
 
 const port = process.env.PORT || 8080;
-app.listen(port, () => logger.info({ msg: 'api listening', port }));
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(port, () => logger.info({ msg: 'api listening', port }));
+}
+
+export default app;

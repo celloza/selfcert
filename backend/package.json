@@ -10,7 +10,8 @@
   "smoke": "tsx scripts/smoke.ts",
   "seed": "tsx scripts/seed.ts",
   "reset:roots": "tsx scripts/reset-roots.ts",
-  "lint": "eslint \"src/**/*.{ts,tsx}\" \"scripts/**/*.ts\" --max-warnings=0"
+  "lint": "eslint \"src/**/*.{ts,tsx}\" \"scripts/**/*.ts\" --max-warnings=0",
+  "test": "vitest run"
   },
   "dependencies": {
     "@azure/data-tables": "^13.3.0",
@@ -40,6 +41,8 @@
   "typescript": "^5.4.0",
   "eslint": "8.57.0",
   "@typescript-eslint/parser": "^7.18.0",
-  "@typescript-eslint/eslint-plugin": "^7.18.0"
+  "@typescript-eslint/eslint-plugin": "^7.18.0",
+  "vitest": "^1.6.0",
+  "supertest": "^6.3.4"
   }
 }
