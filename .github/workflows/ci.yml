@@ -81,10 +81,22 @@ jobs:
       - name: Build backend
         working-directory: backend
         run: npm run build
+      - name: Start backend server
+        working-directory: backend
+        run: |
+          node dist/index.js & echo $! > server.pid
+          for i in {1..40}; do
+            if curl -fsS http://localhost:8080/healthz > /dev/null; then echo "Server up"; break; fi
+            sleep 0.5
+          done
+          curl -fsS http://localhost:8080/healthz || (echo "Server failed to start" && exit 1)
 
       - name: Run smoke script
         working-directory: backend
-        env:
-          TENANT_ID: dummy
-          API_AUDIENCE: dummy
         run: npx tsx scripts/smoke.ts
+
+      - name: Stop backend server
+        if: always()
+        working-directory: backend
+        run: |
+          if [ -f server.pid ]; then kill $(cat server.pid) || true; fi
