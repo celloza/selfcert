@@ -30,8 +30,8 @@ function persistLocalSecret(name: string, value: string) {
     const kind = match[2];
     const file = path.join(localKeysDir, `${id}-${kind}.pem`);
     fs.writeFileSync(file, value, { encoding: 'utf-8', flag: 'w' });
-  } catch (e) {
-    console.warn('Persist local secret failed', e);
+  } catch (_e) {
+    console.warn('Persist local secret failed');
   }
 }
 function loadLocalSecret(name: string): string | undefined {
@@ -67,8 +67,8 @@ function loadLocalRootCAs() {
       const parsed = JSON.parse(fs.readFileSync(rootFile, 'utf-8')) as RootCAMetadata[];
       localRootCAs.splice(0, 0, ...parsed);
     }
-  } catch (e) {
-    console.warn('Failed to load local root CAs', e);
+  } catch (_e) {
+    console.warn('Failed to load local root CAs');
   }
 }
 function persistLocalRootCAs() {
@@ -76,8 +76,8 @@ function persistLocalRootCAs() {
   try {
     if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
     fs.writeFileSync(rootFile, JSON.stringify(localRootCAs, null, 2));
-  } catch (e) {
-    console.warn('Failed to persist local root CAs', e);
+  } catch (_e) {
+    console.warn('Failed to persist local root CAs');
   }
 }
 loadLocalRootCAs();
@@ -101,8 +101,8 @@ export function clearAllRootCAs(): void {
     }
     localSecrets.clear();
     console.log('All local root CAs cleared.');
-  } catch (e) {
-    console.warn('Failed to clear local root CAs', e);
+  } catch (_e) {
+    console.warn('Failed to clear local root CAs');
   }
 }
 
@@ -180,8 +180,8 @@ export async function createRootCA(displayName: string): Promise<RootCAMetadata>
     try {
       const tc = getTableClient(tableName);
       await tc.createEntity({ partitionKey: 'rootca', rowKey: id, displayName, createdAt: meta.createdAt, certPem });
-    } catch (e) {
-      console.error('Failed to persist root CA metadata', e);
+    } catch (_e) {
+      console.error('Failed to persist root CA metadata');
     }
   } else {
     localRootCAs.push(meta);
@@ -197,12 +197,12 @@ export async function importRootCA(params: { displayName: string; certPem: strin
   let priv: forge.pki.PrivateKey;
   try {
     cert = forge.pki.certificateFromPem(certPem);
-  } catch (e) {
+  } catch (_e) {
     throw new Error('certPem invalid');
   }
   try {
     priv = forge.pki.privateKeyFromPem(keyPem);
-  } catch (e) {
+  } catch (_e) {
     throw new Error('keyPem invalid');
   }
   // public key match
@@ -235,8 +235,8 @@ export async function importRootCA(params: { displayName: string; certPem: strin
     try {
       const tc = getTableClient(tableName);
       await tc.createEntity({ partitionKey: 'rootca', rowKey: id, displayName, createdAt: meta.createdAt, certPem: meta.certPem });
-    } catch (e) {
-      console.error('Failed to persist imported root CA metadata', e);
+    } catch (_e) {
+      console.error('Failed to persist imported root CA metadata');
     }
   } else {
     localRootCAs.push(meta);

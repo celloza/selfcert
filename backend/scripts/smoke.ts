@@ -6,7 +6,7 @@ async function main() {
     // 1. Health
     const health = await axios.get(base + '/healthz');
     console.log('HEALTH', health.data);
-  } catch (e) {
+  } catch (_e) {
     console.error('Health check failed. Is server running?');
     process.exit(1);
   }
@@ -40,4 +40,4 @@ async function main() {
   console.log('Smoke test complete.');
 }
 
-main().catch(err => { console.error('Smoke test error', err.response?.data || err.message); process.exit(1); });
+main().catch(_err => { console.error('Smoke test error'); process.exit(1); });
