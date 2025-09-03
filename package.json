@@ -1,7 +1,0 @@
-{
-  "name": "selfcert-monorepo",
-  "private": true,
-  "workspaces": ["backend", "frontend"],
-  "version": "0.0.0",
-  "license": "MIT"
-}
