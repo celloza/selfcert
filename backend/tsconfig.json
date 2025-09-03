@@ -8,7 +8,8 @@
     "strict": true,
     "skipLibCheck": true,
     "outDir": "dist",
-    "sourceMap": true
+    "sourceMap": true,
+    "types": ["node", "vitest"]
   },
   "include": ["src/**/*", "scripts/**/*"]
 }
